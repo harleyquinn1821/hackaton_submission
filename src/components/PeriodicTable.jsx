@@ -117,6 +117,7 @@ function PeriodicTable() {
       }
     }
     
+    
     // Add lanthanides row (elements 58-71)
     for (let i = 0; i < 14; i++) {
       const lanthanide = elements.find(e => e.number === 58 + i);
