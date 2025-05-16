@@ -1,0 +1,679 @@
+.periodic-table-container {
+  max-width: 100%;
+  margin: 0 auto;
+  padding: 10px;
+  box-sizing: border-box;
+  /* Remove max-height constraint to allow full scrolling */
+  max-height: none;
+  /* Only set overflow-x to auto to allow horizontal scrolling */
+  overflow-x: auto;
+  overflow-y: visible;
+  /* Ensure smooth scrolling on touch devices */
+  -webkit-overflow-scrolling: touch;
+}
+
+.periodic-table-container h2 {
+  text-align: center;
+  margin-bottom: 20px;
+  color: #2e3a59;
+}
+
+.controls {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  margin-bottom: 20px;
+}
+
+.search-box input {
+  width: 100%;
+  padding: 10px;
+  border: 1.5px solid #b5c7e7;
+  border-radius: 7px;
+  font-size: 1rem;
+  outline: none;
+  transition: border 0.2s;
+  background: #f7faff;
+  color: black; /* Make input text color black */
+}
+
+.search-box input:focus {
+  border-color: #4caf50;
+}
+
+.category-filters {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  justify-content: center;
+  padding: 12px 5px;
+  background: rgba(255, 255, 255, 0.7);
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+  margin: 15px 0;
+}
+
+.category-btn {
+  background: linear-gradient(145deg, #f0f4ff, #e3eafc);
+  border: none;
+  border-radius: 25px;
+  padding: 8px 16px;
+  font-size: 0.9rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  box-shadow: 0 2px 5px rgba(0,0,0,0.05), inset 0 -2px 0 rgba(0,0,0,0.05);
+  color: #456;
+  position: relative;
+  overflow: hidden;
+  z-index: 1;
+}
+
+.category-btn::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 0;
+  background: linear-gradient(0deg, rgba(108,99,255,0.2), transparent);
+  transition: height 0.2s;
+  z-index: -1;
+}
+
+.category-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 5px 15px rgba(108,99,255,0.2);
+  color: #2e3a59;
+}
+
+.category-btn:hover::after {
+  height: 100%;
+}
+
+.category-btn.active {
+  background: linear-gradient(145deg, #55b359, #4caf50);
+  color: white;
+  box-shadow: 0 3px 10px rgba(76, 175, 80, 0.3), inset 0 -2px 0 rgba(0,0,0,0.1);
+  transform: translateY(-1px);
+}
+
+.category-btn.active:hover {
+  background: linear-gradient(145deg, #5bc560, #4caf50);
+}
+
+/* Add unique color indicators for different categories */
+.category-btn[key="metal"]::before,
+.category-btn[key="nonmetal"]::before,
+.category-btn[key="metalloid"]::before,
+.category-btn[key="noble-gas"]::before,
+.category-btn[key="alkali-metal"]::before,
+.category-btn[key="alkaline-earth"]::before,
+.category-btn[key="transition-metal"]::before,
+.category-btn[key="solid"]::before,
+.category-btn[key="liquid"]::before,
+.category-btn[key="gas"]::before {
+  content: '';
+  display: inline-block;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  margin-right: 6px;
+}
+
+.category-btn[key="metal"]::before { background-color: #1dd1a1; }
+.category-btn[key="nonmetal"]::before { background-color: #54a0ff; }
+.category-btn[key="metalloid"]::before { background-color: #c8d6e5; }
+.category-btn[key="noble-gas"]::before { background-color: #a29bfe; }
+.category-btn[key="alkali-metal"]::before { background-color: #ff6b6b; }
+.category-btn[key="alkaline-earth"]::before { background-color: #feca57; }
+.category-btn[key="transition-metal"]::before { background-color: #48dbfb; }
+.category-btn[key="solid"]::before { background-color: #576574; }
+.category-btn[key="liquid"]::before { background-color: #00d2d3; }
+.category-btn[key="gas"]::before { background-color: #ff9ff3; }
+
+.periodic-table {
+  display: grid;
+  grid-template-columns: repeat(18, minmax(60px, 1fr));
+  grid-template-rows: repeat(10, 60px);
+  gap: 6px; /* Increased gap for better visual separation */
+  margin: 0 auto 30px auto; /* Added bottom margin for spacing */
+  max-width: 100%; 
+  width: fit-content;
+  padding: 15px; /* Added padding around the entire table */
+  padding-bottom: 120px; /* Extra space for lanthanides and actinides */
+  position: relative;
+  overflow: visible;
+  background: rgba(255, 255, 255, 0.4); /* Subtle background */
+  border-radius: 12px; /* Rounded corners */
+  box-shadow: 0 3px 15px rgba(0, 0, 0, 0.05); /* Subtle shadow for depth */
+}
+
+.periodic-table::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: radial-gradient(circle at center, transparent 80%, rgba(76, 175, 80, 0.1));
+  z-index: -2;
+  border-radius: 12px;
+  pointer-events: none;
+}
+
+/* Make the visual separator line more elegant */
+.periodic-table::after {
+  content: "";
+  position: absolute;
+  left: 3%;
+  right: 3%;
+  top: 7.6em;
+  height: 1px;
+  background: linear-gradient(to right, transparent, rgba(0, 0, 0, 0.1) 20%, rgba(0, 0, 0, 0.1) 80%, transparent);
+  z-index: -1;
+}
+
+/* Add label for lanthanide and actinide sections */
+.periodic-table .lanthanide-label,
+.periodic-table .actinide-label {
+  position: absolute;
+  left: 5px;
+  font-size: 0.7rem;
+  color: rgba(0, 0, 0, 0.5);
+  writing-mode: vertical-rl;
+  transform: rotate(180deg);
+  text-align: center;
+}
+
+.periodic-table .lanthanide-label {
+  bottom: 110px;
+}
+
+.periodic-table .actinide-label {
+  bottom: 20px;
+}
+
+.element {
+  border-radius: 3px;
+  padding: 4px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.8rem;
+  position: relative;
+  cursor: pointer;
+  transition: all 0.3s;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.element:hover {
+  transform: scale(1.1);
+  z-index: 10;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+}
+
+.element.filtered {
+  opacity: 0.2;
+  filter: grayscale(100%);
+}
+
+.element-number {
+  position: absolute;
+  top: 2px;
+  left: 4px;
+  font-size: 0.7rem;
+  color: rgba(0, 0, 0, 0.7);
+}
+
+.element-symbol {
+  font-size: 1.2rem;
+  font-weight: bold;
+  margin-top: 8px;
+}
+
+.element-name {
+  font-size: 0.6rem;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  max-width: 100%;
+}
+
+.element-mass {
+  font-size: 0.6rem;
+  color: rgba(0, 0, 0, 0.7);
+}
+
+/* Element categories color coding */
+.element.alkali-metal { background-color: #ff6b6b; }
+.element.alkaline-earth { background-color: #feca57; }
+.element.transition-metal { background-color: #48dbfb; }
+.element.post-transition-metal { background-color: #1dd1a1; }
+.element.metalloid { background-color: #c8d6e5; }
+.element.nonmetal { background-color: #54a0ff; }
+.element.noble-gas { background-color: #a29bfe; }
+.element.lanthanoid { background-color: #5f27cd; }
+.element.actinoid { background-color: #341f97; }
+.element.unknown { background-color: #ced6e0; }
+
+/* Special positioning for lanthanides and actinides */
+.element.lanthanide, .element.actinide {
+  transform-origin: top left;
+  transform: scale(0.85);
+}
+
+.element.lanthanide:hover, .element.actinide:hover {
+  transform: scale(1.1);
+}
+
+/* Add styles for empty lanthanide/actinide placeholders */
+.empty-element {
+  background-color: rgba(200, 200, 200, 0.1);
+  border: 1px dashed rgba(0, 0, 0, 0.1);
+}
+
+/* Fix the lanthanide and actinide rows */
+.element.lanthanide {
+  grid-row: 8.5;
+  transform-origin: center;
+  transform: scale(1);
+  border: 1px solid rgba(95, 39, 205, 0.3);
+}
+
+.element.actinide {
+  grid-row: 9.5;
+  transform-origin: center;
+  transform: scale(1);
+  border: 1px solid rgba(52, 31, 151, 0.3);
+}
+
+.element-details {
+  margin-top: 20px;
+  background: #fff;
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0 2px 10px rgba(44, 62, 80, 0.1);
+  animation: fadeIn 0.3s;
+}
+
+.element-details h3 {
+  margin-top: 0;
+  color: #2e3a59;
+  border-bottom: 1px solid #eee;
+  padding-bottom: 10px;
+}
+
+.detail-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+  gap: 15px;
+}
+
+.detail {
+  display: flex;
+  flex-direction: column;
+  font-size: 0.95rem;
+}
+
+.detail span {
+  font-weight: bold;
+  margin-bottom: 5px;
+  color: #555;
+}
+
+@media (max-width: 768px) {
+  .periodic-table {
+    grid-template-columns: repeat(18, minmax(45px, 1fr));
+    grid-template-rows: repeat(10, 45px);
+    padding: 8px;
+    gap: 4px;
+    min-width: 900px;
+    transform: none;
+    padding-right: 15px;
+    background: rgba(255, 255, 255, 0.3);
+  }
+  
+  .element-symbol {
+    font-size: 1rem;
+  }
+  
+  .element-name, .element-mass {
+    font-size: 0.5rem;
+  }
+  
+  .periodic-table-container {
+    /* Remove fixed padding to maximize scrollable area */
+    padding: 5px 0;
+    /* Ensure container takes full width on mobile */
+    width: 100%;
+    /* Ensure scrolling works on all browsers */
+    overflow-x: scroll;
+    scrollbar-width: thin;
+    -ms-overflow-style: -ms-autohiding-scrollbar;
+  }
+  
+  .periodic-table {
+    /* Set fixed width for proper horizontal scrolling */
+    width: 900px;
+    /* Remove scaling that might cause layout issues */
+    transform: none;
+    /* Ensure sufficient right padding for viewing last columns */
+    padding-right: 20px;
+  }
+}
+
+@media (max-width: 768px) {
+  .periodic-table {
+    grid-template-columns: repeat(18, minmax(45px, 1fr));
+    grid-template-rows: repeat(10, 45px);
+    gap: 8px; /* Increased gap for better mobile viewing */
+    padding: 12px;
+    min-width: 920px; /* Slightly wider to accommodate increased gaps */
+    transform: none;
+    padding-right: 20px;
+    background: rgba(255, 255, 255, 0.3);
+  }
+  
+  /* Improve spacing for elements on mobile */
+  .element {
+    padding: 3px;
+    border-radius: 4px;
+  }
+}
+
+@media (max-width: 480px) {
+  .periodic-table {
+    grid-template-columns: repeat(18, 40px); /* Fixed width columns instead of minmax */
+    grid-template-rows: repeat(10, 40px); /* Increased cell size for better tapping */
+    gap: 10px; /* Significantly increased gap for easier touch interaction */
+    padding: 15px;
+    padding-bottom: 80px;
+    width: 980px; /* Fixed width to accommodate the increased gaps */
+    transform: none;
+    margin: 5px;
+  }
+  
+  /* Adjust fonts and element positioning for better readability */
+  .element-symbol {
+    font-size: 0.95rem;
+    margin-top: 2px;
+  }
+  
+  .element-number {
+    font-size: 0.65rem;
+    top: 1px;
+    left: 3px;
+  }
+  
+  .element-name {
+    font-size: 0.5rem;
+    margin-top: 1px;
+  }
+  
+  .element-mass {
+    display: none; /* Hide mass on smallest screens to reduce clutter */
+  }
+  
+  /* Create subtle borders around elements for better visibility */
+  .element {
+    border: 1px solid rgba(0,0,0,0.1);
+  }
+}
+
+@media (max-width: 1024px) {
+  .periodic-table {
+    grid-template-columns: repeat(18, minmax(50px, 1fr));
+    grid-template-rows: repeat(10, 50px);
+  }
+  
+  .element-symbol {
+    font-size: 1rem;
+  }
+  
+  .element-name, .element-mass {
+    font-size: 0.5rem;
+  }
+}
+
+@media (max-width: 768px) {
+  .periodic-table-container h2 {
+    font-size: 1.3rem;
+    margin-bottom: 15px;
+  }
+  
+  .search-box input {
+    font-size: 0.9rem;
+    padding: 8px;
+  }
+  
+  .category-filters {
+    gap: 6px;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+  
+  .category-btn {
+    padding: 5px 10px;
+    font-size: 0.75rem;
+    white-space: nowrap;
+  }
+  
+  .periodic-table {
+    grid-template-columns: repeat(18, minmax(35px, 1fr));
+    grid-template-rows: repeat(10, 35px);
+  }
+  
+  .element-number {
+    font-size: 0.6rem;
+  }
+  
+  .element-symbol {
+    font-size: 0.85rem;
+    margin-top: 4px;
+  }
+  
+  .element-name {
+    font-size: 0.45rem;
+  }
+  
+  .element-mass {
+    font-size: 0.4rem;
+  }
+  
+  .periodic-table-container {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch; /* Smooth scrolling on iOS */
+    padding: 5px;
+    max-height: none; /* Remove height restriction */
+  }
+  
+  .periodic-table {
+    min-width: 920px; /* Ensure minimum width for scrolling */
+    padding-bottom: 120px; /* More space for lanthanides and actinides */
+  }
+  
+  .periodic-table-container {
+    padding: 5px;
+    overflow-x: auto; /* Enable horizontal scrolling */
+    -webkit-overflow-scrolling: touch; /* Smooth scrolling on iOS */
+  }
+  
+  .periodic-table {
+    min-width: 900px; /* Set minimum width to ensure all elements fit */
+    transform-origin: top left;
+  }
+  
+  /* Make popup fixed at bottom for mobile */
+  .element-popup {
+    position: fixed !important;
+    bottom: 20px !important;
+    left: 50% !important;
+    transform: translateX(-50%) !important;
+    top: auto !important;
+    max-width: 90% !important;
+    width: 300px !important;
+    margin: 0 auto !important;
+    z-index: 9999 !important;
+  }
+}
+
+@media (max-width: 480px) {
+  .periodic-table-container {
+    padding: 0;
+    /* Add bottom margin for popup space */
+    margin-bottom: 60px;
+  }
+  
+  .periodic-table {
+    /* Set smaller fixed width for very small screens */
+    width: 850px;
+    /* Clear any scaling or margins that might interfere */
+    transform: none;
+    margin: 0;
+  }
+  
+  /* Ensure popup stays visible and doesn't interfere with scrolling */
+  .element-popup {
+    position: fixed;
+    bottom: 10px !important;
+    left: 50% !important;
+    transform: translateX(-50%) !important;
+    top: auto !important;
+    width: 85% !important;
+    max-width: 280px !important;
+    z-index: 2000;
+    /* Add shadow to make popup stand out on scroll */
+    box-shadow: 0 -2px 20px rgba(0, 0, 0, 0.3);
+  }
+}
+
+@media (max-width: 480px) {
+  .periodic-table-container {
+    padding: 8px 5px;
+    max-height: none;
+    overflow-x: auto;
+  }
+  
+  .controls {
+    gap: 10px;
+  }
+  
+  /* Make the table horizontally scrollable on very small screens */
+  .periodic-table {
+    grid-template-columns: repeat(18, 30px);
+    grid-template-rows: repeat(10, 30px);
+    overflow-x: auto;
+    padding-bottom: 50px;
+    min-width: 540px; /* Ensure minimum width to make scrolling possible */
+    min-width: 950px; /* Width that ensures all elements are visible */
+    transform-origin: top left;
+    transform: scale(0.95);
+    margin: 0;
+  }
+  
+  /* Adjust popup for touch devices */
+  .element-popup {
+    position: fixed;
+    top: auto !important;
+    left: 5% !important;
+    bottom: 10px;
+    width: 90% !important;
+    max-width: none;
+    z-index: 2000;
+    background: rgba(255, 255, 255, 0.95);
+    border-radius: 8px;
+    box-shadow: 0 -2px 20px rgba(0, 0, 0, 0.2);
+    bottom: 10px;
+    left: 50% !important;
+    transform: translateX(-50%);
+    top: auto !important;
+    width: 90%;
+    max-width: 300px;
+    margin: 0 auto;
+    z-index: 9999;
+  }
+}
+
+/* Fix element popup to appear within the main periodic table */
+.element-popup {
+  position: absolute; /* Use absolute instead of fixed to position within the table */
+  top: 50%; /* Center vertically */
+  left: 50%; /* Center horizontally */
+  transform: translate(-50%, -50%); /* Center the popup */
+  background: rgba(255, 255, 255, 0.98);
+  border-radius: 8px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.25);
+  padding: 15px;
+  z-index: 1000; /* High enough to be visible but within context */
+  width: 300px;
+  max-width: 80%; 
+  max-height: 80%;
+  overflow: auto;
+  backdrop-filter: blur(4px);
+  border: 2px solid;
+  animation: popIn 0.2s ease-out;
+  pointer-events: auto;
+  visibility: visible;
+}
+
+/* Fix element popup display issues */
+.element-popup {
+  position: fixed;
+  background: rgba(255, 255, 255, 0.98);
+  border-radius: 8px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.25);
+  padding: 15px;
+  z-index: 9999; /* Ensure high z-index to appear above everything */
+  width: 280px;
+  max-height: calc(100vh - 40px);
+  overflow: auto;
+  backdrop-filter: blur(4px);
+  border: 2px solid;
+  animation: popIn 0.2s ease-out;
+  pointer-events: auto; /* Allow interaction with the popup */
+  visibility: visible; /* Explicitly set visibility */
+  opacity: 1;
+  transition: opacity 0.2s, transform 0.2s;
+}
+
+@keyframes popIn {
+  0% { transform: scale(0.9); opacity: 0; }
+  100% { transform: scale(1); opacity: 1; }
+}
+
+/* Ensure popup content is visible and properly styled */
+.element-popup h3 {
+  margin: 0 0 10px 0;
+  font-size: 1.3rem;
+  color: #111;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+/* Ensure element hover properly shows the popup */
+.element:hover {
+  transform: scale(1.1);
+  z-index: 100;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+  filter: brightness(1.1);
+}
+
+/* Fix popup display on mobile */
+@media (max-width: 768px) {
+  .element-popup {
+    position: fixed !important;
+    bottom: 20px !important;
+    left: 50% !important;
+    transform: translateX(-50%) !important;
+    top: auto !important;
+    max-width: 90% !important;
+    width: 300px !important;
+    margin: 0 auto !important;
+    z-index: 9999 !important;
+    box-shadow: 0 -4px 25px rgba(0, 0, 0, 0.3) !important;
+    border-width: 2px !important;
+  }
+}
