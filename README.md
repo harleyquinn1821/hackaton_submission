@@ -2,6 +2,14 @@
 
 This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
 
+## Features
+
+### Rock Paper Scissors Game
+A simple interactive game where you play Rock, Paper, Scissors against the computer. The UI is modern, animated, and keeps score for both the player and the computer. The game logic and UI are implemented in the `src/components/RockPaperScissors.jsx` and styled in `RockPaperScissors.css`.
+
+### Periodic Table Explorer
+An interactive periodic table of elements. You can search for elements by name, symbol, or number, and filter by category. Clicking an element shows detailed information in a popup. The code is in `src/components/PeriodicTable.jsx` and styled in `PeriodicTable.css`.
+
 Currently, two official plugins are available:
 
 - [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) for Fast Refresh

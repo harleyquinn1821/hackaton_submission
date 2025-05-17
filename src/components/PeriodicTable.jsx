@@ -1,3 +1,10 @@
+// PeriodicTable.jsx
+//
+// This component renders an interactive periodic table of elements. 
+// //Users can search for elements by name, symbol, or atomic number, and filter by category (e.g., metals, non-metals, noble gases). 
+// Clicking an element displays a popup with detailed information. 
+// The table layout, filtering, and popup logic are all handled within this file.
+
 import { useState, useEffect } from 'react';
 import './PeriodicTable.css';
 import { elements } from './periodicTableData';

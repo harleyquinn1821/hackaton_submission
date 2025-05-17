@@ -1,3 +1,14 @@
+// RockPaperScissors.jsx
+//
+// This component implements a modern, animated Rock Paper Scissors game.
+// Users play against the computer, with real-time score tracking, animated choices, and a random selection option.
+// The game logic, UI, and all interactive features are self-contained in this file.
+//
+// Random Selection:
+// The "Random" button allows the user to let the app pick Rock, Paper, or Scissors for them at random.
+// When clicked, it generates a random index (0, 1, or 2) and selects the corresponding choice from the choices array.
+// It then calls the same handler as a manual pick, so the rest of the game logic and animations work identically.
+
 import { useState, useEffect } from 'react';
 import './RockPaperScissors.css';
 
