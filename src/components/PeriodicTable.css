@@ -25,20 +25,52 @@
   margin-bottom: 20px;
 }
 
+.search-box {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 8px;
+  background: #f0f4ff;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(76,175,80,0.07);
+  padding: 6px 12px;
+  max-width: 350px;
+  margin-left: auto;
+  margin-right: auto;
+  animation: fadeInSearchBox 0.7s cubic-bezier(.4,0,.2,1);
+}
+
+@keyframes fadeInSearchBox {
+  from { opacity: 0; transform: translateY(-20px) scale(0.95); }
+  to { opacity: 1; transform: translateY(0) scale(1); }
+}
+
 .search-box input {
-  width: 100%;
-  padding: 10px;
+  width: 350px;
+  max-width: 100%;
+  padding: 8px 12px;
   border: 1.5px solid #b5c7e7;
-  border-radius: 7px;
+  border-radius: 6px;
   font-size: 1rem;
   outline: none;
-  transition: border 0.2s;
+  transition: border 0.2s, box-shadow 0.2s, transform 0.2s;
   background: #f7faff;
-  color: black; /* Make input text color black */
+  color: #2e3a59;
+  box-shadow: 0 1px 4px rgba(44,62,80,0.04);
 }
 
 .search-box input:focus {
   border-color: #4caf50;
+  box-shadow: 0 0 0 2px #c8f7c5;
+  transform: scale(1.04);
+}
+
+.search-box::before {
+  content: '\1F50D'; /* Unicode magnifying glass */
+  font-size: 1.2rem;
+  margin-right: 8px;
+  color: #b5c7e7;
+  opacity: 0.8;
 }
 
 .category-filters {
@@ -61,7 +93,7 @@
   font-size: 0.9rem;
   font-weight: 500;
   cursor: pointer;
-  transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275), box-shadow 0.2s;
   box-shadow: 0 2px 5px rgba(0,0,0,0.05), inset 0 -2px 0 rgba(0,0,0,0.05);
   color: #456;
   position: relative;
@@ -85,6 +117,7 @@
   transform: translateY(-2px);
   box-shadow: 0 5px 15px rgba(108,99,255,0.2);
   color: #2e3a59;
+  animation: pulseBtn 0.4s;
 }
 
 .category-btn:hover::after {
@@ -96,10 +129,17 @@
   color: white;
   box-shadow: 0 3px 10px rgba(76, 175, 80, 0.3), inset 0 -2px 0 rgba(0,0,0,0.1);
   transform: translateY(-1px);
+  animation: pulseBtn 0.4s;
 }
 
 .category-btn.active:hover {
   background: linear-gradient(145deg, #5bc560, #4caf50);
+}
+
+@keyframes pulseBtn {
+  0% { box-shadow: 0 0 0 0 rgba(76,175,80,0.2); }
+  70% { box-shadow: 0 0 0 8px rgba(76,175,80,0.08); }
+  100% { box-shadow: 0 0 0 0 rgba(76,175,80,0.0); }
 }
 
 /* Add unique color indicators for different categories */
@@ -204,7 +244,7 @@
   font-size: 0.8rem;
   position: relative;
   cursor: pointer;
-  transition: all 0.3s;
+  transition: all 0.25s cubic-bezier(.4,0,.2,1), box-shadow 0.2s;
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
 }
 
@@ -212,6 +252,13 @@
   transform: scale(1.1);
   z-index: 10;
   box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+  animation: popElement 0.3s;
+}
+
+@keyframes popElement {
+  0% { transform: scale(1); box-shadow: 0 1px 3px rgba(0,0,0,0.1); }
+  60% { transform: scale(1.13); box-shadow: 0 8px 24px rgba(76,175,80,0.18); }
+  100% { transform: scale(1.1); box-shadow: 0 5px 15px rgba(0,0,0,0.2); }
 }
 
 .element.filtered {
@@ -361,6 +408,17 @@
     transform: none;
     /* Ensure sufficient right padding for viewing last columns */
     padding-right: 20px;
+  }
+  
+  .search-box input {
+    width: 140px;
+    font-size: 0.9rem;
+    padding: 8px;
+  }
+  
+  .search-box {
+    padding: 4px 6px;
+    max-width: 95vw;
   }
 }
 
